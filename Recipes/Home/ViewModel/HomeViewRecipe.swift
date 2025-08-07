@@ -1,4 +1,4 @@
-struct HomeViewRecipe: Identifiable, Equatable {
+struct HomeViewRecipe: Identifiable, Equatable, Hashable {
     let id: Int
     let name: String
     let ingredients: [String]

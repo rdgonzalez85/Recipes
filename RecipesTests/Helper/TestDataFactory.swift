@@ -62,4 +62,43 @@ struct TestDataFactory {
             mealType: mealType
         )
     }
+    
+    static func createHomeViewRecipe(
+        id: Int = 1,
+        name: String = "name",
+        ingredients: [String] = ["ingredient1", "ingredient2"],
+        instructions: [String] = ["instructions1", "instructions2"],
+        prepTimeMinutes: Int = 10,
+        cookTimeMinutes: Int = 20,
+        servings: Int = 2,
+        difficulty: String = "Easy",
+        cuisine: String = "Italian",
+        caloriesPerServing: Int = 300,
+        tags: [String] = ["Pizza"],
+        userId: Int = 1,
+        image: String = "image",
+        rating: String = "7.8",
+        reviewCount: Int = 13,
+        mealType: [String] = ["Dinner"]
+    ) -> HomeViewRecipe {
+        HomeViewRecipe(
+            id: id,
+            name: name,
+            ingredients: ingredients,
+            instructions: instructions,
+            prepTimeMinutes: prepTimeMinutes,
+            cookTimeMinutes: cookTimeMinutes,
+            servings: servings,
+            difficulty: difficulty,
+            cuisine: cuisine,
+            caloriesPerServing: caloriesPerServing,
+            tags: tags,
+            userId: userId,
+            image: image,
+            rating: rating,
+            reviewCount: reviewCount,
+            mealType: mealType
+        )
+    }
+
 }

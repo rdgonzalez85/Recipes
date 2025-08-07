@@ -2,7 +2,7 @@ import SwiftUI
 
 struct HomeView: View {
     private var viewModel: HomeViewModel
-    @State private var showingFilters = false
+    @State private var coordinator = HomeViewNavigationCoordinator()
     private let constants: HomeViewConstants
     
     init(viewModel: HomeViewModel,
@@ -12,7 +12,7 @@ struct HomeView: View {
     }
     
     var body: some View {
-        NavigationView {
+        NavigationStack(path: $coordinator.path) {
             VStack {
                 switch viewModel.state {
                 case .loading:
@@ -41,14 +41,15 @@ struct HomeView: View {
         if let recipes = viewModel.recipes,
            !recipes.isEmpty {
             List(recipes) { recipe in
-                NavigationLink(
-                    destination: DetailView(
-                        recipe: recipe,
-                        viewModel: DetailViewModel()
-                    )
-                ) {
+                Button(action: {
+                    self.coordinator.navigateToRecipeDetail(recipe)
+                }) {
                     RecipeRowView(recipe: recipe)
                 }
+                .buttonStyle(PlainButtonStyle())
+            }
+            .navigationDestination(for: HomeViewRecipe.self) { recipe in
+                coordinator.createDetailView(for: recipe)
             }
         } else {
             Text(constants.emptyStateText)
