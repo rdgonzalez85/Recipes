@@ -28,4 +28,9 @@ extension Recipe {
     static func fetchAll() -> Request<RecipeResponse> {
         Request<RecipeResponse>(path: "/recipes")
     }
+    
+    static func fetch(id: Int) -> Request<Recipe> {
+        let stringId = String(id)
+        return Request<Recipe>(path: "/recipes/" + stringId)
+    }
 }

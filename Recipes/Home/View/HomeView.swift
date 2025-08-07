@@ -41,7 +41,14 @@ struct HomeView: View {
         if let recipes = viewModel.recipes,
            !recipes.isEmpty {
             List(recipes) { recipe in
-                RecipeRowView(recipe: recipe)
+                NavigationLink(
+                    destination: DetailView(
+                        recipe: recipe,
+                        viewModel: DetailViewModel()
+                    )
+                ) {
+                    RecipeRowView(recipe: recipe)
+                }
             }
         } else {
             Text(constants.emptyStateText)

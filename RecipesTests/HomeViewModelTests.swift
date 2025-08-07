@@ -59,6 +59,7 @@ final class HomeViewModelTests: XCTestCase {
         let expectedError = APIServiceError.invalidURL
         mockAPIService.setMockError(expectedError)
         let expectedErrorMessage = expectedError.errorDescription
+        
         // When
         await viewModel.loadRecipes()
         
