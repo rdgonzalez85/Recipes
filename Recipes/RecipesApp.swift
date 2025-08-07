@@ -2,9 +2,10 @@ import SwiftUI
 
 @main
 struct RecipesApp: App {
+    let homeViewModel = HomeViewModel()
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView(viewModel: homeViewModel)
         }
     }
 }

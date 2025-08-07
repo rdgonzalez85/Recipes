@@ -15,7 +15,7 @@ enum APIServiceError: Error {
     case decodingError(Error)
     case networkError(Error)
     
-    var errorDescription: String? {
+    var errorDescription: String {
         switch self {
         case .invalidURL:
             return "Invalid URL"

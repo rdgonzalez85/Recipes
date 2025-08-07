@@ -7,7 +7,7 @@ struct RecipeResponse: Codable {
     let limit: Int
 }
 
-struct Recipe: Codable, Identifiable, Equatable {
+struct Recipe: Codable, Equatable {
     let id: Int
     let name: String
     let ingredients: [String]
