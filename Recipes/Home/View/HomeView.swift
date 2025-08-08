@@ -5,11 +5,14 @@ struct HomeView: View {
     @State private var coordinator = HomeViewNavigationCoordinator()
     @State private var showingFilters = false
     private let constants: HomeViewConstants
+    private let accessibility: Accessibility
     
     init(viewModel: HomeViewModel,
-         constants: HomeViewConstants = HomeViewConstants()) {
+         constants: HomeViewConstants = HomeViewConstants(),
+         accessibility: Accessibility = Accessibility()) {
         self.viewModel = viewModel
         self.constants = constants
+        self.accessibility = accessibility
     }
     
     var body: some View {
@@ -30,6 +33,7 @@ struct HomeView: View {
                     Button(constants.navigation.filterButtonTitle) {
                         showingFilters = true
                     }
+                    .accessibilityIdentifier(accessibility.filterButton)
                 }
             }
             .sheet(isPresented: $showingFilters) {
@@ -60,13 +64,13 @@ struct HomeView: View {
     private var listView: some View {
         if let recipes = viewModel.recipes,
            !recipes.isEmpty {
-            List(recipes) { recipe in
-                Button(action: {
-                    self.coordinator.navigateToRecipeDetail(recipe)
-                }) {
-                    RecipeRowView(recipe: recipe)
-                }
-                .buttonStyle(PlainButtonStyle())
+            List(recipes.enumerated().map { $0 }, id: \.element) { index, recipe in
+                RecipeRowView(recipe: recipe)
+                    .onTapGesture {
+                        self.coordinator.navigateToRecipeDetail(recipe)
+                    }
+                    .accessibilityElement(children: .combine)
+                    .accessibilityIdentifier("\(self.accessibility.element)_\(index)")
             }
             .navigationDestination(for: HomeViewRecipe.self) { recipe in
                 coordinator.createDetailView(for: recipe)
@@ -93,6 +97,10 @@ struct HomeView: View {
             }
             .buttonStyle(self.constants.errorView.buttonStyle)
         }
+    }
+    struct Accessibility {
+        let element: String = "recipes_list.element"
+        let filterButton: String = "recipes_list.filter_button"
     }
 }
 

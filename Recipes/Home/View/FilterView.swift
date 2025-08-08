@@ -6,17 +6,19 @@ struct FilterView: View {
     let onClear: () -> Void
     
     private let constants: FilterViewConstants
-    
+    private let accessibility: Accessibility
     init(
         @Bindable viewModel: HomeViewModel,
         onApply: @escaping () -> Void,
         onClear: @escaping () -> Void,
-        constants: FilterViewConstants = FilterViewConstants()
+        constants: FilterViewConstants = FilterViewConstants(),
+        accessibility: Accessibility = Accessibility()
     ) {
         self.viewModel = viewModel
         self.onApply = onApply
         self.onClear = onClear
         self.constants = constants
+        self.accessibility = accessibility
     }
     
     
@@ -30,6 +32,7 @@ struct FilterView: View {
                     Picker(self.constants.text.difficultyFilterTitle, selection: $viewModel.selectedDifficulty) {
                         ForEach(viewModel.allDifficulties, id: \.self) { option in
                             Text(option.rawValue).tag(option)
+                                .accessibilityIdentifier("\(accessibility.difficulty)_\(option)")
                         }
                     }
                     .pickerStyle(SegmentedPickerStyle())
@@ -42,6 +45,7 @@ struct FilterView: View {
                     Picker(self.constants.text.ratingFilterTitle, selection: $viewModel.selectedRating) {
                         ForEach(viewModel.allRatings, id: \.self) { option in
                             Text(option.rawValue).tag(option)
+                                .accessibilityIdentifier("\(accessibility.rating)_\(option)")
                         }
                     }
                     .pickerStyle(SegmentedPickerStyle())
@@ -63,9 +67,15 @@ struct FilterView: View {
                     Button(self.constants.text.applyButtonTitle) {
                         onApply()
                     }
+                    .accessibilityIdentifier(self.accessibility.applyButton)
                 }
             }
         }
+    }
+    struct Accessibility {
+        let difficulty = "filter_view.difficulty"
+        let rating = "filter_view.rating"
+        let applyButton = "filter_view.apply_button"
     }
 }
 

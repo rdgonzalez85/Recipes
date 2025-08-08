@@ -3,11 +3,14 @@ import SwiftUI
 struct DetailView: View {
     private let recipe: HomeViewRecipe
     private let constants: DetailViewConstants
+    private let accessibility: Accessibility
     
     init(recipe: HomeViewRecipe,
-         constants: DetailViewConstants = DetailViewConstants()) {
+         constants: DetailViewConstants = DetailViewConstants(),
+         accessibility: Accessibility = Accessibility()) {
         self.recipe = recipe
         self.constants = constants
+        self.accessibility = accessibility
     }
     
     var body: some View {
@@ -49,7 +52,7 @@ struct DetailView: View {
                 Text(recipe.name)
                     .font(self.constants.text.titleFont)
                     .bold()
-                
+                    .accessibilityIdentifier(self.accessibility.title)
                 HStack {
                     Image(systemName: self.constants.icons.starFill)
                         .foregroundColor(self.constants.colors.starIcon)
@@ -160,6 +163,10 @@ struct DetailView: View {
                 }
             }
         }
+    }
+    
+    struct Accessibility {
+        let title = "details_view.title"
     }
 }
 

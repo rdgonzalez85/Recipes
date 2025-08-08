@@ -24,6 +24,7 @@ struct RecipeRowView: View {
             }
             Spacer()
         }
+        .contentShape(Rectangle())
         .padding(.vertical, self.constants.layout.verticalPadding)
     }
     
