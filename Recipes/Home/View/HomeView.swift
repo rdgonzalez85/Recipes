@@ -24,10 +24,10 @@ struct HomeView: View {
                     errorView
                 }
             }
-            .navigationTitle(constants.navigationTitle)
+            .navigationTitle(constants.navigation.navigationTitle)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(constants.filterButtonTitle) {
+                    Button(constants.navigation.filterButtonTitle) {
                         showingFilters = true
                     }
                 }
@@ -52,7 +52,7 @@ struct HomeView: View {
     }
     
     private var loadingView: some View {
-        ProgressView(constants.loadingText)
+        ProgressView(constants.statusView.loadingText)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
@@ -72,7 +72,7 @@ struct HomeView: View {
                 coordinator.createDetailView(for: recipe)
             }
         } else {
-            Text(constants.emptyStateText)
+            Text(constants.statusView.emptyStateText)
                 .foregroundColor(.secondary)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
@@ -83,7 +83,7 @@ struct HomeView: View {
             if let error = viewModel.errorMessage {
                 Text(error)
             } else {
-                Text(self.constants.errorView.unkownError)
+                Text(self.constants.errorView.unknownError)
             }
             
             Button(constants.errorView.retryButtonTitle) {
@@ -97,22 +97,23 @@ struct HomeView: View {
 }
 
 struct HomeViewConstants {
+    struct StatusView {
+        let loadingText: String = "Loading recipes..."
+        let emptyStateText: String = "No recipes found"
+    }
+
     struct ErrorView {
-        let unkownError: String = "Unknown error"
+        let unknownError: String = "Unknown error"
         let retryButtonTitle: String = "Try Again"
         let buttonStyle: BorderedProminentButtonStyle = .borderedProminent
     }
+
+    struct Navigation {
+        let navigationTitle: String = "Recipes"
+        let filterButtonTitle: String = "Filters"
+    }
+
+    let statusView = StatusView()
     let errorView = ErrorView()
-    let navigationTitle = "Recipes"
-    let searchPlaceholder = "Search recipes..."
-    let difficultyFilterTitle = "Difficulty"
-    let ratingFilterTitle = "Rating"
-    let allDifficulties = "All"
-    let allRatings = "All"
-    let errorAlertTitle = "Error"
-    let okButtonTitle = "OK"
-    let loadingText = "Loading recipes..."
-    let emptyStateText = "No recipes found"
-    let filterButtonTitle = "Filters"
-    let clearFiltersTitle = "Clear Filters"
+    let navigation = Navigation()
 }
