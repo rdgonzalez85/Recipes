@@ -8,7 +8,7 @@ struct FilterView: View {
     private let constants: FilterViewConstants
     
     init(
-        viewModel: HomeViewModel,
+        @Bindable viewModel: HomeViewModel,
         onApply: @escaping () -> Void,
         onClear: @escaping () -> Void,
         constants: FilterViewConstants = FilterViewConstants()

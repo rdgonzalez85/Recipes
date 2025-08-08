@@ -70,7 +70,7 @@ final class HomeViewModelTests: XCTestCase {
         
         // Then
         XCTAssertEqual(viewModel.state, .error(expectedErrorMessage))
-        XCTAssertEqual(viewModel.error, expectedErrorMessage)
+        XCTAssertEqual(viewModel.errorMessage, expectedErrorMessage)
     }
     
     func testGivenRecipesLoaded_WhenViewModelSelectedDifficultyIsHardAndViewModelAppliesFilter_ThenViewModelRecipesAreFiltered() async {

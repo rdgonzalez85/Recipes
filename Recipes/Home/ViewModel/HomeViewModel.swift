@@ -11,7 +11,7 @@ final class HomeViewModel {
     
     var recipes: [HomeViewRecipe]?
     
-    var error: String? {
+    var errorMessage: String? {
         switch state {
         case .error(let error):
             return error

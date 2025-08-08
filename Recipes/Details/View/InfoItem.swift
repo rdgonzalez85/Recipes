@@ -14,8 +14,9 @@ struct InfoItem: View {
         self.value = value
         self.constants = constants
     }
+    
     var body: some View {
-        VStack(spacing: 2) {
+        VStack(spacing: self.constants.layout.infoItemVStackSpace) {
             Text(value)
                 .font(self.constants.text.valueFont)
                 .bold()
@@ -32,10 +33,15 @@ struct InfoItemConstants {
         let titleFont: Font = .caption
     }
     
+    struct Layout {
+        let infoItemVStackSpace: CGFloat = 2
+    }
+    
     struct Colors {
         let title: Color = .secondary
     }
 
+    let layout = Layout()
     let text = Text()
     let colors = Colors()
 }

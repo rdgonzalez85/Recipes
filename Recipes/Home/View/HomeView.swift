@@ -21,8 +21,7 @@ struct HomeView: View {
                 case .loaded:
                     listView
                 case .error(_):
-                    EmptyView() // handle errors later
-                        
+                    errorView
                 }
             }
             .navigationTitle(constants.navigationTitle)
@@ -79,9 +78,31 @@ struct HomeView: View {
         }
     }
     
+    var errorView: some View {
+        VStack {
+            if let error = viewModel.errorMessage {
+                Text(error)
+            } else {
+                Text(self.constants.errorView.unkownError)
+            }
+            
+            Button(constants.errorView.retryButtonTitle) {
+                Task { [viewModel] in
+                    await viewModel.loadRecipes()
+                }
+            }
+            .buttonStyle(self.constants.errorView.buttonStyle)
+        }
+    }
 }
 
 struct HomeViewConstants {
+    struct ErrorView {
+        let unkownError: String = "Unknown error"
+        let retryButtonTitle: String = "Try Again"
+        let buttonStyle: BorderedProminentButtonStyle = .borderedProminent
+    }
+    let errorView = ErrorView()
     let navigationTitle = "Recipes"
     let searchPlaceholder = "Search recipes..."
     let difficultyFilterTitle = "Difficulty"
