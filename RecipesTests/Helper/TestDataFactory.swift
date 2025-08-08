@@ -71,13 +71,14 @@ struct TestDataFactory {
         prepTimeMinutes: Int = 10,
         cookTimeMinutes: Int = 20,
         servings: Int = 2,
-        difficulty: String = "Easy",
+        difficulty: Difficulty = .easy,
         cuisine: String = "Italian",
         caloriesPerServing: Int = 300,
         tags: [String] = ["Pizza"],
         userId: Int = 1,
         image: String = "image",
-        rating: String = "7.8",
+        rating: Double = 7.8,
+        ratingString: String = "7.8",
         reviewCount: Int = 13,
         mealType: [String] = ["Dinner"]
     ) -> HomeViewRecipe {
@@ -96,6 +97,7 @@ struct TestDataFactory {
             userId: userId,
             image: image,
             rating: rating,
+            ratingString: ratingString,
             reviewCount: reviewCount,
             mealType: mealType
         )

@@ -1,3 +1,5 @@
+import Foundation
+
 struct HomeViewRecipe: Identifiable, Equatable, Hashable {
     let id: Int
     let name: String
@@ -6,19 +8,23 @@ struct HomeViewRecipe: Identifiable, Equatable, Hashable {
     let prepTimeMinutes: Int
     let cookTimeMinutes: Int
     let servings: Int
-    let difficulty: String
+    let difficulty: Difficulty
     let cuisine: String
     let caloriesPerServing: Int
     let tags: [String]
     let userId: Int
     let image: String
-    let rating: String
+    let rating: Double
+    let ratingString: String
     let reviewCount: Int
     let mealType: [String]
 }
 
 extension HomeViewRecipe {
-    init(recipe: Recipe) {
+    init(
+        recipe: Recipe,
+        ratingFormatter: NumberFormatter = NumberFormatter()
+    ) {
         self.id = recipe.id
         self.name = recipe.name
         self.ingredients = recipe.ingredients
@@ -26,14 +32,17 @@ extension HomeViewRecipe {
         self.prepTimeMinutes = recipe.prepTimeMinutes
         self.cookTimeMinutes = recipe.cookTimeMinutes
         self.servings = recipe.servings
-        self.difficulty = recipe.difficulty
+        self.difficulty = Difficulty(rawValue: recipe.difficulty) ?? .all
         self.cuisine = recipe.cuisine
         self.caloriesPerServing = recipe.caloriesPerServing
         self.tags = recipe.tags
         self.userId = recipe.userId
         self.image = recipe.image
-        self.rating = String(format: "%.1f", recipe.rating)
+        self.rating = recipe.rating
+        self.ratingString = ratingFormatter.string(from: NSNumber(value: rating)) ?? ""
         self.reviewCount = recipe.reviewCount
         self.mealType = recipe.mealType
     }
 }
+
+

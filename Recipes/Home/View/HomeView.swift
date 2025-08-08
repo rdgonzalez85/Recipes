@@ -3,6 +3,7 @@ import SwiftUI
 struct HomeView: View {
     private var viewModel: HomeViewModel
     @State private var coordinator = HomeViewNavigationCoordinator()
+    @State private var showingFilters = false
     private let constants: HomeViewConstants
     
     init(viewModel: HomeViewModel,
@@ -17,14 +18,34 @@ struct HomeView: View {
                 switch viewModel.state {
                 case .loading:
                     loadingView
-                case .loaded(_):
+                case .loaded:
                     listView
                 case .error(_):
                     EmptyView() // handle errors later
                         
                 }
             }
-            .navigationTitle(constants.navigationTitle)            
+            .navigationTitle(constants.navigationTitle)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(constants.filterButtonTitle) {
+                        showingFilters = true
+                    }
+                }
+            }
+            .sheet(isPresented: $showingFilters) {
+                FilterView(
+                    viewModel: viewModel,
+                    onApply: {
+                        viewModel.applyFilters()
+                        showingFilters = false
+                    },
+                    onClear: {
+                        viewModel.clearFilters()
+                        showingFilters = false
+                    }
+                )
+            }
         }
         .task {
             await viewModel.loadRecipes()
