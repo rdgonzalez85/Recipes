@@ -3,17 +3,14 @@ import XCTest
 
 @MainActor
 final class HomeViewNavigationCoordinatorTests: XCTestCase {
-    var mockAPIService: MockAPIService!
     var coordinator: HomeViewNavigationCoordinator!
     
     override func setUp() {
         super.setUp()
-        mockAPIService = MockAPIService()
-        coordinator = HomeViewNavigationCoordinator(apiService: mockAPIService)
+        coordinator = HomeViewNavigationCoordinator()
     }
     
     override func tearDown() {
-        mockAPIService = nil
         coordinator = nil
         super.tearDown()
     }

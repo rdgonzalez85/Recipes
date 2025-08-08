@@ -5,12 +5,6 @@ import Observation
 final class HomeViewNavigationCoordinator {
     var path = NavigationPath()
     
-    private let apiService: APIServiceProtocol
-    
-    init(apiService: APIServiceProtocol = APIService()) {
-        self.apiService = apiService
-    }
-    
     func navigateToRecipeDetail(_ recipe: HomeViewRecipe) {
         path.append(recipe)
     }
@@ -24,7 +18,6 @@ final class HomeViewNavigationCoordinator {
     }
     
     func createDetailView(for recipe: HomeViewRecipe) -> DetailView {
-        let viewModel = DetailViewModel(apiService: apiService)
-        return DetailView(recipe: recipe, viewModel: viewModel)
+        return DetailView(recipe: recipe)
     }
 }

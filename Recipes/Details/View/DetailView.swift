@@ -1,21 +1,20 @@
 import SwiftUI
 
 struct DetailView: View {
-    private var viewModel: DetailViewModel
     private let recipe: HomeViewRecipe
-    private let constants = DetailViewConstants()
+    private let constants: DetailViewConstants
     
     init(recipe: HomeViewRecipe,
-         viewModel: DetailViewModel) {
+         constants: DetailViewConstants = DetailViewConstants()) {
         self.recipe = recipe
-        self.viewModel = viewModel
+        self.constants = constants
     }
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: self.constants.layout.vStackSpacing) {
                 recipeImage
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: self.constants.layout.innerVStackSpacing) {
                     titleRatingView
                     quickInfoView
                     Divider()
@@ -25,7 +24,7 @@ struct DetailView: View {
                     Divider()
                     additionalInfoView
                 }
-                .padding()
+                .padding(self.constants.layout.defaultPadding)
             }
         }
         .navigationBarTitleDisplayMode(.inline)
@@ -35,62 +34,63 @@ struct DetailView: View {
         AsyncImage(url: URL(string: recipe.image)) { image in
             image
                 .resizable()
-                .aspectRatio(contentMode: .fill)
+                .aspectRatio(contentMode: self.constants.image.aspectRatio)
         } placeholder: {
             Rectangle()
-                .foregroundColor(.gray.opacity(0.3))
+                .foregroundColor(self.constants.image.placeholderColor)
         }
-        .frame(height: 250)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .frame(height: self.constants.image.height)
+        .clipShape(RoundedRectangle(cornerRadius: self.constants.image.cornerRadius))
     }
     
     private var titleRatingView: some View {
         HStack {
             VStack(alignment: .leading) {
                 Text(recipe.name)
-                    .font(.title)
+                    .font(self.constants.text.titleFont)
                     .bold()
                 
                 HStack {
-                    Image(systemName: "star.fill")
-                        .foregroundColor(.yellow)
-                    Text(recipe.rating)
-                    Text("(\(recipe.reviewCount) reviews)")
-                        .foregroundColor(.secondary)
+                    Image(systemName: self.constants.icons.starFill)
+                        .foregroundColor(self.constants.colors.starIcon)
+                    Text(recipe.ratingString)
+                    Text("(\(recipe.reviewCount) \(self.constants.text.reviews)")
+                        .foregroundColor(self.constants.colors.secondaryText)
                 }
-                .font(.subheadline)
+                .font(self.constants.text.ratingFont)
             }
             
             Spacer()
             
-            Text(recipe.difficulty)
-                .font(.caption)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
-                .background(difficultyColor.opacity(0.2))
+            let difficultyColor = recipe.difficulty.color(colors: self.constants.colors)
+            Text(recipe.difficulty.rawValue)
+                .font(self.constants.text.tagsFont)
+                .padding(.horizontal, self.constants.layout.difficultyHorizontalPadding)
+                .padding(.vertical, self.constants.layout.difficultyVerticalPadding)
+                .background(difficultyColor.opacity(self.constants.layout.difficultyOpacity))
                 .foregroundColor(difficultyColor)
                 .clipShape(Capsule())
         }
     }
     
     private var quickInfoView: some View {
-        HStack(spacing: 20) {
-            InfoItem(title: constants.prepTimeTitle, value: "\(recipe.prepTimeMinutes) \(constants.minutesUnit)")
-            InfoItem(title: constants.cookTimeTitle, value: "\(recipe.cookTimeMinutes) \(constants.minutesUnit)")
-            InfoItem(title: constants.caloriesTitle, value: "\(recipe.caloriesPerServing) \(constants.caloriesUnit)")
-            InfoItem(title: constants.servingsTitle, value: "\(recipe.servings)")
+        HStack(spacing: self.constants.layout.hStackSpacing) {
+            InfoItem(title: self.constants.text.prepTimeTitle, value: "\(recipe.prepTimeMinutes) \(self.constants.text.minutesUnit)")
+            InfoItem(title: self.constants.text.cookTimeTitle, value: "\(recipe.cookTimeMinutes) \(self.constants.text.minutesUnit)")
+            InfoItem(title: self.constants.text.caloriesTitle, value: "\(recipe.caloriesPerServing) \(self.constants.text.caloriesUnit)")
+            InfoItem(title: self.constants.text.servingsTitle, value: "\(recipe.servings)")
         }
     }
 
     private var ingredientsView: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(constants.ingredientsTitle)
-                .font(.headline)
+        VStack(alignment: .leading, spacing: self.constants.layout.instructionsVStackPadding) {
+            Text(self.constants.text.ingredientsTitle)
+                .font(self.constants.text.sectionTitleFont)
             
             ForEach(Array(recipe.ingredients.enumerated()), id: \.offset) { index, ingredient in
                 HStack(alignment: .top) {
                     Text("\(index + 1).")
-                        .foregroundColor(.secondary)
+                        .foregroundColor(self.constants.colors.secondaryText)
                     Text(ingredient)
                     Spacer()
                 }
@@ -99,18 +99,18 @@ struct DetailView: View {
     }
     
     private var instructionsView: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(constants.instructionsTitle)
-                .font(.headline)
+        VStack(alignment: .leading, spacing: self.constants.layout.instructionsVStackPadding) {
+            Text(self.constants.text.instructionsTitle)
+                .font(self.constants.text.sectionTitleFont)
             
             ForEach(Array(recipe.instructions.enumerated()), id: \.offset) { index, instruction in
-                HStack(alignment: .top, spacing: 12) {
+                HStack(alignment: .top, spacing: self.constants.layout.instructionsHStackSpacing) {
                     Text("\(index + 1)")
-                        .frame(width: 24, height: 24)
-                        .background(Color.blue.opacity(0.1))
-                        .foregroundColor(.blue)
+                        .frame(width: self.constants.layout.instructionCircleSize, height: self.constants.layout.instructionCircleSize)
+                        .background(self.constants.colors.instructionCircle.opacity(self.constants.layout.instructionCircleOpacity)) 
+                        .foregroundColor(self.constants.colors.instructionCircle) 
                         .clipShape(Circle())
-                        .font(.caption)
+                        .font(self.constants.text.instructionsFont)
                         .bold()
                     
                     Text(instruction)
@@ -118,37 +118,37 @@ struct DetailView: View {
                     
                     Spacer()
                 }
-                .padding(.vertical, 2)
+                .padding(.vertical, self.constants.layout.instructionVerticalPadding)
             }
         }
     }
     
     private var additionalInfoView: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: self.constants.layout.instructionsVStackPadding) {
             HStack {
-                Text(constants.cuisineTitle)
-                    .font(.subheadline)
+                Text(self.constants.text.cuisineTitle)
+                    .font(self.constants.text.additionalInfoFont)
                     .bold()
                 Spacer()
                 Text(recipe.cuisine)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .font(self.constants.text.additionalInfoFont)
+                    .foregroundColor(self.constants.colors.secondaryText)
             }
             
             if !recipe.tags.isEmpty {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(constants.tagsTitle)
-                        .font(.subheadline)
+                VStack(alignment: .leading, spacing: self.constants.layout.instructionsVStackPadding) {
+                    Text(self.constants.text.tagsTitle)
+                        .font(self.constants.text.additionalInfoFont)
                         .bold()
                     
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
                             ForEach(recipe.tags, id: \.self) { tag in
                                 Text(tag)
-                                    .font(.caption)
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 4)
-                                    .background(Color.gray.opacity(0.2))
+                                    .font(self.constants.text.tagsFont)
+                                    .padding(.horizontal, self.constants.layout.tagHorizontalPadding)
+                                    .padding(.vertical, self.constants.layout.tagVerticalPadding)
+                                    .background(self.constants.colors.tagBackground)
                                     .clipShape(Capsule())
                             }
                         }
@@ -157,30 +157,100 @@ struct DetailView: View {
             }
         }
     }
-    
-    private var difficultyColor: Color {
-        switch recipe.difficulty.lowercased() {
-        case "easy": return .green
-        case "medium": return .orange
-        case "hard": return .red
-        default: return .gray
-        }
-    }
 }
 
-
 struct DetailViewConstants {
-    let ingredientsTitle = "Ingredients"
-    let instructionsTitle = "Instructions"
-    let prepTimeTitle = "Prep Time"
-    let cookTimeTitle = "Cook Time"
-    let caloriesTitle = "Calories"
-    let servingsTitle = "Servings"
-    let cuisineTitle = "Cuisine"
-    let tagsTitle = "Tags"
-    let minutesUnit = "min"
-    let caloriesUnit = "cal"
-    let servingsUnit = "servings"
-    let backButtonTitle = "Back"
-    let shareButtonTitle = "Share"
+    struct Image {
+        let height: CGFloat = 250
+        let aspectRatio: ContentMode = .fill
+        let cornerRadius: CGFloat = 12
+        let placeholderColor: Color = .gray.opacity(0.3)
+    }
+
+    struct Icons {
+        let starFill: String = "star.fill"
+    }
+
+    struct Layout {
+        let vStackSpacing: CGFloat = 16
+        let innerVStackSpacing: CGFloat = 12
+        let hStackSpacing: CGFloat = 20
+        let instructionsHStackSpacing: CGFloat = 12
+        let defaultPadding: CGFloat = 16
+        let instructionsVStackPadding: CGFloat = 8
+        let instructionCircleSize: CGFloat = 24
+        let instructionCircleOpacity: Double = 0.1
+        let instructionVerticalPadding: CGFloat = 2
+        let difficultyHorizontalPadding: CGFloat = 12
+        let difficultyVerticalPadding: CGFloat = 6
+        let difficultyOpacity: Double = 0.2
+        let tagHorizontalPadding: CGFloat = 8
+        let tagVerticalPadding: CGFloat = 4
+        let tagBackgroundOpacity: Double = 0.2
+    }
+
+    struct Text {
+        let ingredientsTitle: String = "Ingredients"
+        let instructionsTitle: String = "Instructions"
+        let prepTimeTitle: String = "Prep Time"
+        let cookTimeTitle: String = "Cook Time"
+        let caloriesTitle: String = "Calories"
+        let servingsTitle: String = "Servings"
+        let cuisineTitle: String = "Cuisine"
+        let tagsTitle: String = "Tags"
+        let minutesUnit: String = "min"
+        let caloriesUnit: String = "cal"
+        let servingsUnit: String = "servings"
+        let backButtonTitle: String = "Back"
+        let shareButtonTitle: String = "Share"
+        let reviews: String = "reviews"
+        let titleFont: Font = .title
+        let titleFontWeight: Font.Weight = .bold
+        let ratingFont: Font = .subheadline
+        let sectionTitleFont: Font = .headline
+        let additionalInfoFont: Font = .subheadline
+        let additionalInfoFontWeight: Font.Weight = .bold
+        let tagsFont: Font = .caption
+        let instructionsFont: Font = .caption
+        let infoItemTitleFont: Font = .caption
+    }
+    
+    struct Colors {
+        let starIcon: Color = .yellow
+        let difficultyEasy: Color = .green
+        let difficultyMedium: Color = .orange
+        let difficultyHard: Color = .red
+        let difficultyDefault: Color = .gray
+        let instructionCircle: Color = .blue
+        let secondaryText: Color = .secondary
+        let tagBackground: Color = .gray.opacity(0.2)
+    }
+
+    let image = Image()
+    let icons = Icons()
+    let layout = Layout()
+    let text = Text()
+    let colors = Colors()
+}
+
+extension DetailViewConstants.Colors: DifficultyColors { }
+protocol DifficultyColors {
+    var difficultyEasy: Color { get }
+    var difficultyMedium: Color { get }
+    var difficultyHard: Color { get }
+    var difficultyDefault: Color { get }
+}
+extension Difficulty {
+    func color(colors: DifficultyColors) -> Color {
+        switch self {
+            case .easy:
+                return colors.difficultyEasy
+            case .medium:
+                return colors.difficultyMedium
+            case .hard:
+                return colors.difficultyHard
+            default:
+                return colors.difficultyDefault
+        }
+    }
 }
