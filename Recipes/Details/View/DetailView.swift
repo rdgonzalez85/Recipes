@@ -54,9 +54,11 @@ struct DetailView: View {
                     Image(systemName: self.constants.icons.starFill)
                         .foregroundColor(self.constants.colors.starIcon)
                     Text(recipe.ratingString)
-                    Text("(\(recipe.reviewCount) \(self.constants.text.reviews)")
+                    Text("(\(recipe.reviewCount) \(self.constants.text.reviews))")
                         .foregroundColor(self.constants.colors.secondaryText)
                 }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("\(self.constants.text.rating) \(recipe.ratingString), \(recipe.reviewCount) \(self.constants.text.reviews)")
                 .font(self.constants.text.ratingFont)
             }
             
@@ -94,6 +96,7 @@ struct DetailView: View {
                     Text(ingredient)
                     Spacer()
                 }
+                .accessibilityElement(children: .combine)
             }
         }
     }
@@ -118,6 +121,7 @@ struct DetailView: View {
                     
                     Spacer()
                 }
+                .accessibilityElement(children: .combine)
                 .padding(.vertical, self.constants.layout.instructionVerticalPadding)
             }
         }
@@ -204,6 +208,7 @@ struct DetailViewConstants {
         let backButtonTitle: String = "Back"
         let shareButtonTitle: String = "Share"
         let reviews: String = "reviews"
+        let rating: String = "rating: "
         let titleFont: Font = .title
         let titleFontWeight: Font.Weight = .bold
         let ratingFont: Font = .subheadline

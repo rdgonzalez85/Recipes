@@ -24,6 +24,8 @@ struct InfoItem: View {
                 .font(self.constants.text.titleFont)
                 .foregroundColor(self.constants.colors.title)
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(title) - \(value)")
     }
 }
 
